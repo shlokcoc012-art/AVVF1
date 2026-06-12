@@ -1,0 +1,67 @@
+{
+  "summary": "First full test of newly-added P1 Admin Dashboard (JWT auth, list/detail/update/notes/export/filters/brute-force) and regression check on public landing page. 21/21 backend pytest cases pass; all critical frontend flows pass via Playwright. Found and fixed one backend bug: brute-force lockout returned HTTP 500 instead of 429 due to MongoDB naive-vs-aware datetime comparison.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_admin_api.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "FIXED by testing agent: _check_lockout() in /app/backend/server.py compared a MongoDB-stored naive UTC datetime with a tz-aware datetime.now(timezone.utc), raising TypeError -> HTTP 500 on attempts 6+. Now normalizes locked_until to UTC-aware before comparison so 429 is returned as designed.",
+    "Consider also normalising last_at when read back from MongoDB if any future logic compares it.",
+    "Brute-force identifier uses request.client.host (the ingress proxy IP behind k8s). In real production behind multiple proxies, this may collapse all users to one identifier and lock out legitimate users. Consider parsing X-Forwarded-For for the originating client IP.",
+    "AdminDashboard.jsx is ~530 lines and combines list view + drawer. Splitting BookingDetailDrawer into its own file would improve maintainability.",
+    "CORS is set to allow_origins=['*'] with allow_credentials=False. OK while using Bearer (not cookies), but if cookies are added later this combination silently breaks credentialed CORS."
+  ],
+  "updated_files": [
+    "/app/backend/server.py (fixed _check_lockout datetime tz comparison)",
+    "/app/backend/tests/test_admin_api.py (new pytest suite, 21 tests)"
+  ],
+  "success_rate": {
+    "backend": "100% (21/21 after fix)",
+    "frontend": "100% on critical flows"
+  },
+  "test_credentials": "admin@astrovedicvani.com / Nrp@1912 (from /app/memory/test_credentials.md, verified working)",
+  "seed_data_creation": "test_create_public_booking creates a 'TEST_QA User' booking (phone 9000000001) via POST /api/bookings; test_cleanup then marks it as cancelled. UI test also adds a notes string to a booking. These are intentional and identifiable by TEST_/cancelled status.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Backend pytest suite at /app/backend/tests/test_admin_api.py covers health, login (success/fail/brute-force lockout), /auth/me, all /admin/bookings CRUD + filters + CSV export, and 401-gating. JWT key in localStorage is 'avv_admin_token'. Brute-force test uses a unique throwaway email per run so it doesn't lock out the real admin. The lockout fix relies on _check_lockout normalising naive Mongo datetimes — keep that intact.",
+  "tests_verified": {
+    "backend": [
+      "POST /api/auth/login success -> 200 + access_token + user{role:admin}",
+      "POST /api/auth/login wrong password -> 401",
+      "GET /api/auth/me without/with/bad token -> 401/200/401",
+      "All /api/admin/* endpoints require Bearer (401 without)",
+      "GET /api/admin/bookings returns count/items/stats with all 6 status keys",
+      "Filters: status, search (phone) work correctly",
+      "GET /api/admin/bookings/{id} -> 200 with cart_items+notes; invalid id -> 400; not-found -> 404",
+      "PATCH status: valid persists; invalid status -> 400",
+      "PATCH notes: persists and is readable on GET",
+      "GET /api/admin/bookings/export -> 200 text/csv with Content-Disposition attachment, correct header row",
+      "POST /api/bookings (public, no auth) -> 201 (no regression)",
+      "Brute-force: 5 failed attempts -> 429 lockout (post-fix)"
+    ],
+    "frontend": [
+      "Public landing page renders (no regression from admin routes)",
+      "Unauthenticated /admin -> redirects to /admin/login",
+      "Login form renders with required data-testid attributes",
+      "Wrong creds show admin-login-error",
+      "Correct creds redirect to /admin and render dashboard, stats, filters, table",
+      "View button opens booking-detail-drawer with detail-name populated",
+      "Clicking set-status-confirmed updates booking and StatusPill changes to status-pill-confirmed",
+      "detail-notes-input + detail-notes-save persists notes",
+      "filter-search debounces and narrows table; filter-clear restores",
+      "export-csv-btn fires /api/admin/bookings/export with Bearer header, returns 200",
+      "admin-logout-btn clears avv_admin_token from localStorage and redirects to /admin/login"
+    ]
+  },
+  "rca of the issue": "_check_lockout in server.py compared entry['locked_until'] (naive datetime returned by Motor/MongoDB) with datetime.now(timezone.utc) (tz-aware). Python raises TypeError on this comparison, which FastAPI surfaces as a 500. Reproduction: POST /api/auth/login with the same email and wrong password 6 times -> attempts 1-5 return 401, attempt 6 returns 500 (should be 429). Mitigation applied: read locked_until and, if tzinfo is None, set tzinfo=UTC before comparing. After fix, the 6th attempt correctly returns 429 with the 'Try again in N minute(s)' detail."
+}

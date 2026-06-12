@@ -1,3 +1,4 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Stats from './components/Stats'
@@ -12,10 +13,13 @@ import CartDrawer from './components/CartDrawer'
 import CartButton from './components/CartButton'
 import Footer from './components/Footer'
 import { CartProvider, useCart } from './context/CartContext'
+import { AuthProvider } from './admin/AuthContext'
+import AdminLogin from './admin/AdminLogin'
+import AdminDashboard from './admin/AdminDashboard'
+import ProtectedRoute from './admin/ProtectedRoute'
 
-function AppInner() {
+function PublicSite() {
   const { setIsOpen } = useCart()
-  // Every "Book Now" entry point opens the cart drawer; booking form lives inside it.
   const openBooking = () => setIsOpen(true)
 
   return (
@@ -37,12 +41,31 @@ function AppInner() {
   )
 }
 
-function App() {
+function PublicSiteWithCart() {
   return (
     <CartProvider>
-      <AppInner />
+      <PublicSite />
     </CartProvider>
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/*" element={<PublicSiteWithCart />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  )
+}
