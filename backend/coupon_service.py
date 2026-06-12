@@ -118,9 +118,10 @@ def compute_discount(subtotal: int | float, percent: int) -> int:
     """Discount applies to the subtotal (mode fee excluded). Rounded down to whole ₹."""
     try:
         sub = int(subtotal)
+        pct = int(percent)
     except (TypeError, ValueError):
         return 0
-    return max(0, (sub * int(percent)) // 100)
+    return max(0, (sub * pct) // 100)
 
 
 # ── Atomic redemption (call inside booking creation) ─────────────────────────

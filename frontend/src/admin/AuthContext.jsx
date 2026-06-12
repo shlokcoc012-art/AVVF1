@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { AuthContext } from './authContextObject'
 
 const TOKEN_KEY = 'avv_admin_token'
@@ -71,8 +71,13 @@ export function AuthProvider({ children }) {
     return res
   }, [token, logout])
 
+  const ctxValue = useMemo(
+    () => ({ token, user, status, login, logout, authFetch }),
+    [token, user, status, login, logout, authFetch],
+  )
+
   return (
-    <AuthContext.Provider value={{ token, user, status, login, logout, authFetch }}>
+    <AuthContext.Provider value={ctxValue}>
       {children}
     </AuthContext.Provider>
   )

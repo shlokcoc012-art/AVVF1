@@ -7,8 +7,9 @@ import requests
 BASE_URL = os.environ.get("REACT_APP_BACKEND_URL", "https://67428743-fd50-462c-8127-eb7d41d1f21f.preview.emergentagent.com").rstrip("/")
 API = f"{BASE_URL}/api"
 
-ADMIN_EMAIL = "admin@astrovedicvani.com"
-ADMIN_PASSWORD = "Nrp@1912"
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@astrovedicvani.com")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
+assert ADMIN_PASSWORD, "Set ADMIN_PASSWORD env var before running the test suite"
 
 
 @pytest.fixture(scope="module")

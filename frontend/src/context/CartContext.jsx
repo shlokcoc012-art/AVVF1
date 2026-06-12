@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import { createContext, useContext, useState, useCallback, useMemo } from 'react'
 
 // ─── Pricing tables ──────────────────────────────────────────────────────────
 
@@ -241,8 +241,8 @@ export function CartProvider({ children }) {
   const modeFee = MODE_FEES[mode] || 0
   const total = subtotal() + modeFee
 
-  return (
-    <CartCtx.Provider value={{
+  const ctxValue = useMemo(
+    () => ({
       items, addItem, removeItem, hasItem, sectionItems,
       sectionTotal, hasCombo, hasCrossCombo, hasDivineCombo, divineAnchorSection,
       triComboMode, setTriComboMode,
@@ -250,7 +250,17 @@ export function CartProvider({ children }) {
       subtotal, modeFee, total,
       isOpen, setIsOpen,
       comboPickerSection, setComboPickerSection,
-    }}>
+    }),
+    [
+      items, addItem, removeItem, hasItem, sectionItems,
+      sectionTotal, hasCombo, hasCrossCombo, hasDivineCombo, divineAnchorSection,
+      triComboMode, mode, subtotal, modeFee, total, isOpen,
+      comboPickerSection,
+    ],
+  )
+
+  return (
+    <CartCtx.Provider value={ctxValue}>
       {children}
     </CartCtx.Provider>
   )
