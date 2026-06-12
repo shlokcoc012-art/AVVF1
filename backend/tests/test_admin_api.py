@@ -1,15 +1,29 @@
 """Backend tests for AstroVedicVani admin dashboard and auth endpoints."""
 import os
 import time
+import uuid
 import pytest
 import requests
+from pymongo import MongoClient
 
-BASE_URL = os.environ.get("REACT_APP_BACKEND_URL", "https://67428743-fd50-462c-8127-eb7d41d1f21f.preview.emergentagent.com").rstrip("/")
+BASE_URL = os.environ.get("BACKEND_TEST_URL") or os.environ.get("REACT_APP_BACKEND_URL") or "http://localhost:8001"
+BASE_URL = BASE_URL.rstrip("/")
 API = f"{BASE_URL}/api"
 
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@astrovedicvani.com")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 assert ADMIN_PASSWORD, "Set ADMIN_PASSWORD env var before running the test suite"
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _clean_login_attempts():
+    """Wipe login_attempts at the start of the test session so static-email
+    failure tests aren't locked out by lingering state from previous runs."""
+    mongo = MongoClient(os.environ.get("MONGO_URL", "mongodb://localhost:27017"))
+    db = mongo[os.environ.get("DB_NAME", "astrovedicvani")]
+    db.login_attempts.delete_many({})
+    yield
+    mongo.close()
 
 
 @pytest.fixture(scope="module")
@@ -195,8 +209,15 @@ def test_admin_export_csv(auth_headers):
 
 # ── Brute force: trigger 429 ──
 def test_brute_force_lockout():
-    # Use a unique email-like identifier so we don't lock out the real admin
-    bad_email = f"bruteforce-{int(time.time())}@example.com"
+    # Use a per-run unique identifier so we don't collide with previous runs
+    bad_email = f"bruteforce-{uuid.uuid4().hex[:12]}@example.com"
+
+    # Pre-clean any leftover lockout state for this identifier (defensive: in
+    # case the backend's IP detection sees us as the same client as before).
+    mongo = MongoClient(os.environ.get("MONGO_URL", "mongodb://localhost:27017"))
+    db = mongo[os.environ.get("DB_NAME", "astrovedicvani")]
+    db.login_attempts.delete_many({"identifier": {"$regex": bad_email}})
+
     last_status = None
     for _ in range(7):
         r = requests.post(f"{API}/auth/login", json={"email": bad_email, "password": "wrong"})
@@ -204,6 +225,10 @@ def test_brute_force_lockout():
         if last_status == 429:
             break
     assert last_status == 429, f"Expected 429 after repeated failures, got {last_status}"
+
+    # Clean up our own lockout entry so subsequent runs start fresh
+    db.login_attempts.delete_many({"identifier": {"$regex": bad_email}})
+    mongo.close()
 
 
 # ── Cleanup ──

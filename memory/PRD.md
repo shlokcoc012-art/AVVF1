@@ -33,6 +33,11 @@ User requested: "import my website code from the selected GitHub repository" (`s
 - Fixed `pydantic_core` version mismatch on backend
 - Verified booking flow end-to-end (POST /api/bookings → 201; landing page renders)
 
+### Jan 2026 — Code-review fixes + Pre-commit hook
+- Resolved all ESLint warnings/errors (clean `yarn lint` baseline): removed unused vars in `CartDrawer`, `ModernAstrology`, `TriComboPromo`; cleaned stale eslint-disable directives in `AdminDashboard`; documented `useInView` deps decision; extracted `SECTION_CONFIG`/`CROSS_COMBO`/`DIVINE_COMBO`/`SERVICE_PRICES`/`MODE_FEES` into `frontend/src/context/cartConstants.js` so Vite Fast-Refresh works
+- Backend: removed unused imports in `server.py`/`coupon_service.py`; explicit init of `sub`/`pct` in `compute_discount` to satisfy static analyzers; 21/21 pytest still passing
+- Added pre-commit hook (`scripts/pre-commit.sh` + `scripts/install-hooks.sh`): on each commit, runs ESLint on staged JS/JSX and `py_compile` + full pytest on staged backend files. Install once with `bash scripts/install-hooks.sh`. Bypass with `--no-verify`. Docs at `scripts/README.md`.
+
 ### Jan 2026 — Admin Dashboard (P1)
 - **Backend**:
   - `auth.py` module: bcrypt password hashing, PyJWT token issuance, idempotent admin seeding from env, `get_current_admin` FastAPI dependency
