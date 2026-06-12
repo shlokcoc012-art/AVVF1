@@ -108,14 +108,40 @@ export default function Hero({ onBooking }) {
         <h1 className="text-5xl md:text-7xl font-extrabold mb-2 tracking-tight fade-in-up hero-title-flow" style={{animationDelay:'0.4s'}}>
           AstroVedicVani
         </h1>
-        <div className="text-amber-200/90 text-xl md:text-2xl mb-5 tracking-widest fade-in-up" style={{animationDelay:'0.55s'}}>
-          Ancient Wisdom &nbsp;·&nbsp; Celestial Guidance &nbsp;·&nbsp; Astrological Insights
+        <div
+          className="text-amber-200/95 mb-6 fade-in-up flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-4 text-lg sm:text-xl md:text-2xl"
+          style={{
+            animationDelay: '0.55s',
+            fontFamily: '"Cinzel", "Cormorant Garamond", serif',
+            letterSpacing: '0.18em',
+            textShadow: '0 0 18px rgba(251,191,36,0.25)',
+          }}
+        >
+          <span className="font-medium whitespace-nowrap">Ancient Wisdom</span>
+          <span aria-hidden="true" className="hidden sm:inline text-yellow-400/60 text-sm">✦</span>
+          <span className="font-medium whitespace-nowrap">Celestial Guidance</span>
+          <span aria-hidden="true" className="hidden sm:inline text-yellow-400/60 text-sm">✦</span>
+          <span className="font-medium whitespace-nowrap">Astrological Insights</span>
         </div>
 
         {/* Tagline */}
-        <p className="text-yellow-100/85 text-lg md:text-xl mb-10 max-w-3xl mx-auto leading-relaxed fade-in-up" style={{animationDelay:'0.7s'}}>
+        <p
+          className="text-yellow-100/90 mb-10 max-w-3xl mx-auto fade-in-up text-lg sm:text-xl md:text-2xl"
+          style={{
+            animationDelay: '0.7s',
+            fontFamily: '"Cormorant Garamond", "Georgia", serif',
+            fontWeight: 400,
+            lineHeight: 1.55,
+            letterSpacing: '0.01em',
+          }}
+        >
           Unlock the cosmic secrets of your destiny with
-          <span className="text-yellow-300 font-semibold"> authentic Vedic wisdom</span> — trusted by 5000+ souls worldwide
+          <span
+            className="text-yellow-300"
+            style={{ fontStyle: 'italic', fontWeight: 600 }}
+          > authentic Vedic wisdom</span>
+          <span className="text-amber-300/80"> — </span>
+          trusted by 5000+ souls worldwide
         </p>
 
         {/* CTA Buttons */}

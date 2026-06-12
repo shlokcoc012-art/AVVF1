@@ -41,17 +41,17 @@ export default function Navbar({ onBooking }) {
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-500/70 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-[62px]">
+        <div className="relative flex items-center justify-between h-[62px]">
 
           {/* Logo */}
-          <div className="flex items-center gap-3">
+          <div className="flex-1 lg:flex-none flex items-center justify-center lg:justify-start gap-3">
             <div className="relative flex-shrink-0">
               <span className="text-3xl drop-shadow-lg">🔮</span>
               <span className="absolute -top-1 -right-1 text-[10px] animate-spin" style={{animationDuration:'4s'}}>✨</span>
             </div>
-            <div>
+            <div className="text-center lg:text-left">
               <div className="nav-title-flow font-extrabold text-xl leading-tight tracking-wide">AstroVedicVani</div>
-              <div className="flex flex-col items-center leading-none" style={{textShadow:'0 0 8px rgba(251,191,36,0.4)'}}>
+              <div className="flex flex-col items-center lg:items-start leading-none" style={{textShadow:'0 0 8px rgba(251,191,36,0.4)'}}>
                 <span className="text-yellow-200 font-extrabold text-sm tracking-wide uppercase">Pt. N.R. Pathak</span>
                 <span className="text-yellow-200/75 font-semibold text-[10px] tracking-widest">· ज्योतिषाचार्य</span>
               </div>
@@ -136,8 +136,13 @@ export default function Navbar({ onBooking }) {
             </button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button className="lg:hidden text-yellow-300 text-2xl" onClick={() => setMenuOpen(!menuOpen)}>
+          {/* Mobile Menu Button (absolute so logo stays centered on mobile) */}
+          <button
+            className="lg:hidden absolute right-0 top-1/2 -translate-y-1/2 text-yellow-300 text-2xl p-2"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+            data-testid="mobile-menu-toggle"
+          >
             {menuOpen ? '✕' : '☰'}
           </button>
         </div>
