@@ -26,6 +26,8 @@ export default function Navbar({ onBooking }) {
     { label: 'Prashn Kundali', sublabel: 'प्रश्न कुण्डली', href: '#prashn', icon: '🪐' },
     { label: 'Raj Yoga Analysis', sublabel: 'राज योग विश्लेषण', href: '#svc-rajyoga', icon: '👑' },
     { label: 'Dhan Yog Analysis', sublabel: 'धन योग विश्लेषण', href: '#svc-dhanyoga', icon: '💎' },
+    { label: 'Past Life & Karma', sublabel: 'पूर्व जन्म व कर्म', href: '#svc-pastlife', icon: '🪷' },
+    { label: 'Holistic Healing', sublabel: 'समग्र चिकित्सा', href: '#healing', icon: '🧘' },
     { label: 'Vedic Astrology', sublabel: 'वैदिक ज्योतिष', href: '#learnings', icon: '🕉️' },
   ]
 

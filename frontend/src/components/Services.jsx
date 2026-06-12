@@ -20,6 +20,14 @@ const services = [
     points: ['Lakshmi & Kubera Yogas', '2nd–11th House Synthesis', 'Active Dhana Dasha Periods', 'Sudden Wealth Indicators', 'Investment Timing Windows', 'Wealth-attracting Remedies'],
   },
   {
+    id: 'svc-pastlife', icon: '🪷', title: 'Past Life & Karma Analysis', subtitle: 'पूर्व जन्म व कर्म विश्लेषण', price: 2501, wasPrice: 3999, discount: '37% Off',
+    color: 'bg-gradient-to-br from-purple-600 via-fuchsia-600 to-amber-600',
+    featured: true,
+    desc: 'A profound deep-dive into your planetary positions to unlock the secrets of your past life deeds (Sanchita Karma) and discover your true soul purpose and karmic lessons for this current life.',
+    detail: 'Decodes Sanchita and Prarabdha karma through Atmakaraka, the Navamsa (D9) and Shastiamsha (D60) charts to reveal exactly which karmic threads are active in this lifetime and how to resolve them.',
+    points: ['Past Life Regression via D9 & D60 Charts', 'Pending Karmic Debts (Rinanubandhana)', 'Present Life Soul Purpose (Atmakaraka)', 'Precise Remedial Measures for Karmic Relief'],
+  },
+  {
     id: 'svc-grah', icon: '🛡️', title: 'Grah Dosh Relief', subtitle: 'ग्रह दोष निवारण', price: 2599, wasPrice: 3999, discount: '35% Off',
     color: 'bg-gradient-to-br from-red-500 to-amber-600',
     desc: 'Identify and neutralize Mangal Dosh, Kaal Sarp, Sade Sati, Pitra Dosh and Nazar Dosh with personalized mantras, gemstones and yantras.',

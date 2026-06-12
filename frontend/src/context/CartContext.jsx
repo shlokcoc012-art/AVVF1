@@ -46,6 +46,13 @@ export const SECTION_CONFIG = {
     comboPrice: null,
     dark: false,
   },
+  'Holistic Healing': {
+    label: 'Holistic Healing & Energy Alignment',
+    unitPrice: 11000,
+    comboQty: null,
+    comboPrice: null,
+    dark: true,
+  },
 }
 
 // ─── Cross-section "Tri-Combo" ─────────────────────────────────────────────────

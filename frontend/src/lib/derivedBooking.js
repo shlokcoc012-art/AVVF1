@@ -1,9 +1,10 @@
 // Maps cart sections + item titles to BookingModal-compatible Service / Concern values
 
 export const SECTION_TO_SERVICE = {
-  'Prashn Kundali':   'Prashn Kundali',
-  'Modern Astrology': 'Modern Astrology',
-  'Hasth Rekha':      'Hasth Rekha (Palmistry)',
+  'Prashn Kundali':    'Prashn Kundali',
+  'Modern Astrology':  'Modern Astrology',
+  'Hasth Rekha':       'Hasth Rekha (Palmistry)',
+  'Holistic Healing':  'Holistic Healing & Energy Alignment',
   // 'Services' section → service IS the item title (Raj Yoga Analysis, Grah Dosh Relief, etc.)
 }
 
@@ -48,12 +49,21 @@ export const TITLE_TO_CONCERN = {
   'Special Yogas & Marks': 'Spiritual Growth',
 
   // Specialized "Services" section
-  'Raj Yoga Analysis':  'Raj Yoga & Success',
-  'Dhan Yog Analysis':  'Wealth & Finance',
-  'Grah Dosh Relief':   'Other',
-  'Shubh Muhurt':       'Other',
-  'Kundali & Marriage': 'Marriage & Relationships',
-  'Career & Future':    'Career & Profession',
+  'Raj Yoga Analysis':          'Raj Yoga & Success',
+  'Dhan Yog Analysis':          'Wealth & Finance',
+  'Past Life & Karma Analysis': 'Spiritual Growth',
+  'Grah Dosh Relief':           'Other',
+  'Shubh Muhurt':               'Other',
+  'Kundali & Marriage':         'Marriage & Relationships',
+  'Career & Future':            'Career & Profession',
+
+  // Holistic Healing & Energy Alignment (all map to Health/Spiritual)
+  'Chronic Disease & Vitality Healing':   'Health',
+  'Chakra Awakening & Alignment':         'Spiritual Growth',
+  'Emotional Trauma & Anxiety Relief':    'Health',
+  'Aura Cleansing & Shielding':           'Spiritual Growth',
+  'Karmic Blockage Dissolution':          'Spiritual Growth',
+  'Spiritual Awakening & Cord Cutting':   'Spiritual Growth',
 }
 
 /**

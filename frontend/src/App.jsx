@@ -8,6 +8,7 @@ import PrashnKundali from './components/PrashnKundali'
 import ModernAstrology from './components/ModernAstrology'
 import TriComboPromo from './components/TriComboPromo'
 import Specialties from './components/Specialties'
+import HolisticHealing from './components/HolisticHealing'
 import Testimonials from './components/Testimonials'
 import CartDrawer from './components/CartDrawer'
 import CartButton from './components/CartButton'
@@ -33,6 +34,7 @@ function PublicSite() {
       <TriComboPromo />
       <ModernAstrology />
       <Specialties />
+      <HolisticHealing />
       <Testimonials />
       <Footer onBooking={openBooking} />
       <CartDrawer />
