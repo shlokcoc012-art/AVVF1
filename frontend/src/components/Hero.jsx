@@ -109,11 +109,11 @@ export default function Hero({ onBooking }) {
           AstroVedicVani
         </h1>
         <div
-          className="text-amber-200/95 mb-8 fade-in-up flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-4 text-xl sm:text-2xl md:text-[1.7rem]"
+          className="text-amber-200/95 mb-8 fade-in-up flex flex-col sm:flex-row flex-wrap items-center justify-center gap-1.5 sm:gap-x-4 sm:gap-y-2 text-xl sm:text-xl md:text-2xl"
           style={{
             animationDelay: '0.55s',
             fontFamily: '"Cinzel", "Cormorant Garamond", serif',
-            letterSpacing: '0.18em',
+            letterSpacing: '0.16em',
             textShadow: '0 0 18px rgba(251,191,36,0.25)',
             marginTop: '0.25rem',
           }}
@@ -127,20 +127,21 @@ export default function Hero({ onBooking }) {
 
         {/* Tagline */}
         <p
-          className="text-yellow-100/90 mb-10 max-w-3xl mx-auto fade-in-up text-xl sm:text-2xl md:text-[1.7rem]"
+          className="text-yellow-100/90 mb-10 max-w-3xl mx-auto fade-in-up text-xl sm:text-2xl md:text-[1.55rem]"
           style={{
             animationDelay: '0.7s',
             fontFamily: '"Cormorant Garamond", "Georgia", serif',
             fontWeight: 400,
-            lineHeight: 1.5,
+            lineHeight: 1.55,
             letterSpacing: '0.01em',
           }}
         >
           Unlock the cosmic secrets of your destiny with
+          <br />
           <span
             className="text-yellow-300"
             style={{ fontWeight: 600 }}
-          > Authentic Vedic Wisdom</span>
+          >Authentic Vedic Wisdom</span>
           <br />
           Trusted by 5000+ people worldwide
         </p>
