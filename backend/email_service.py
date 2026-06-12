@@ -181,6 +181,39 @@ def _admin_text(b: dict) -> str:
     return "\n".join(lines)
 
 
+def _coupon_block_html(b: dict) -> str:
+    nc = b.get("next_coupon")
+    if not nc:
+        return ""
+    pct = nc.get("percent")
+    code = nc.get("code", "")
+    return f'''
+      <div style="margin-top:18px;padding:18px;background:linear-gradient(135deg,#fef9c3 0%,#fde68a 50%,#fcd34d 100%);border:2px dashed #b45309;border-radius:14px;text-align:center">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:#92400e;font-weight:800">🎁 Thank-you Gift · Next Booking</div>
+        <div style="margin:10px 0 6px;font-size:13px;color:#78350f">Use this one-time coupon on your next consultation</div>
+        <div style="margin:8px 0 6px;display:inline-block;background:#451a03;color:#fde68a;font-family:monospace;font-weight:800;font-size:18px;letter-spacing:.16em;padding:10px 18px;border-radius:10px;border:1px solid #92400e">
+          {code}
+        </div>
+        <div style="margin-top:8px;font-size:22px;color:#b45309;font-weight:900">{pct}% OFF</div>
+        <div style="margin-top:6px;font-size:11px;color:#92400e;line-height:1.5">
+          Valid for one-time use only · Cannot be combined with other offers
+        </div>
+      </div>'''
+
+
+def _coupon_applied_html(b: dict) -> str:
+    ca = b.get("coupon_applied")
+    if not ca:
+        return ""
+    return (
+        f'<div style="margin:10px 0;padding:10px 14px;background:#dcfce7;border:1px solid #86efac;'
+        f'border-radius:10px;color:#166534;font-size:12px">'
+        f'🎟️ Coupon <b style="font-family:monospace">{ca.get("code")}</b> applied — '
+        f'you saved <b>₹{int(ca.get("discount", 0)):,}</b> ({ca.get("percent")}% off)'
+        f'</div>'
+    )
+
+
 def _customer_html(b: dict) -> str:
     items_html = _items_rows_html(b.get("cart_items") or [])
     slot = _format_slot(b)
@@ -217,8 +250,12 @@ def _customer_html(b: dict) -> str:
 
       {items_html if b.get('cart_items') else ''}
 
+      {_coupon_applied_html(b)}
+
       <p style="margin:14px 0 4px;font-size:13px;color:#a16207"><b>Booking ID</b></p>
       <p style="margin:0;font-family:monospace;font-size:13px;color:#451a03">{b.get('id','—')}</p>
+
+      {_coupon_block_html(b)}
 
       <div style="margin-top:16px;padding:12px 14px;background:#fef3c7;border-left:4px solid #f59e0b;border-radius:8px;color:#78350f;font-size:12px;line-height:1.5">
         📅 <b>Add to Calendar</b> — open the <code style="background:#fde68a;padding:1px 6px;border-radius:4px">astrovedicvani-consultation.ics</code> attachment and your calendar app (Google Calendar, Apple Calendar, Outlook) will save a tentative 2-hour callback window. We&apos;ll move it to the exact time once we speak with you.
@@ -260,6 +297,19 @@ def _customer_text(b: dict) -> str:
     lines += [
         f"  Total   : {_fmt_money(b.get('total'))}",
         f"  Booking ID: {b.get('id','—')}",
+    ]
+    ca = b.get("coupon_applied")
+    if ca:
+        lines.append(f"  Coupon  : {ca.get('code')} — you saved ₹{int(ca.get('discount', 0)):,} ({ca.get('percent')}% off)")
+    nc = b.get("next_coupon")
+    if nc:
+        lines += [
+            "",
+            "🎁 THANK-YOU GIFT — Your one-time coupon for the next booking:",
+            f"   CODE: {nc.get('code')}    →  {nc.get('percent')}% OFF",
+            "   Valid for one-time use only. Cannot be combined with other offers.",
+        ]
+    lines += [
         "",
         "📅 Add to Calendar: open the attached astrovedicvani-consultation.ics file to save",
         "the consultation in Google Calendar / Apple Calendar / Outlook.",

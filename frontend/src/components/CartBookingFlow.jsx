@@ -32,12 +32,6 @@ const INDIA_CITIES_BY_STATE = {
   'West Bengal': ['Kolkata', 'Howrah', 'Durgapur', 'Asansol', 'Siliguri'],
 }
 
-const VALID_COUPONS = {
-  FIRST50:  { discount: 50, label: '50% off for first-time clients!' },
-  ASTRO20:  { discount: 20, label: '20% off — seasonal offer' },
-  DIWALI25: { discount: 25, label: '25% Diwali special discount' },
-}
-
 const STEPS = ['Personal', 'Birth', 'Confirm']
 
 // IST business hours, 30-min slots
@@ -82,6 +76,7 @@ export default function CartBookingFlow({ onBack, onConfirmed }) {
   })
   const [errors, setErrors] = useState({})
   const [couponStatus, setCouponStatus] = useState(null)
+  const [couponLoading, setCouponLoading] = useState(false)
   const [loading, setLoading] = useState(false)
   const [submitError, setSubmitError] = useState(null)
 
@@ -97,6 +92,10 @@ export default function CartBookingFlow({ onBack, onConfirmed }) {
 
   function validatePhone(v) { return /^\d{10}$/.test((v || '').replace(/\s/g, '')) }
   function validateEmail(v) { return !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) }
+
+  // Apply coupon discount to the displayed total (server recomputes authoritatively)
+  const couponDiscount = couponStatus?.valid ? Number(couponStatus.discount || 0) : 0
+  const finalTotal = Math.max(0, total - couponDiscount)
 
   function validateStep(s) {
     const ne = {}
@@ -127,8 +126,30 @@ export default function CartBookingFlow({ onBack, onConfirmed }) {
 
   function applyCoupon() {
     const code = (form.coupon || '').trim().toUpperCase()
-    if (VALID_COUPONS[code]) setCouponStatus({ valid: true, code, ...VALID_COUPONS[code] })
-    else setCouponStatus({ valid: false })
+    if (!code) { setCouponStatus({ valid: false, message: 'Enter a coupon code' }); return }
+    setCouponLoading(true)
+    setCouponStatus(null)
+    fetch('/api/coupons/validate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, subtotal: subtotal() }),
+    })
+      .then(async r => {
+        const data = await r.json().catch(() => ({}))
+        if (!r.ok) {
+          setCouponStatus({ valid: false, message: data?.detail || 'Invalid coupon code' })
+          return
+        }
+        setCouponStatus({
+          valid: true,
+          code: data.code,
+          percent: data.discount_percent,
+          discount: data.discount_amount,
+          message: data.message,
+        })
+      })
+      .catch(() => setCouponStatus({ valid: false, message: 'Could not validate coupon. Please try again.' }))
+      .finally(() => setCouponLoading(false))
   }
 
   async function handleSubmit() {
@@ -162,7 +183,7 @@ export default function CartBookingFlow({ onBack, onConfirmed }) {
         })),
         subtotal: subtotal(),
         modeFee,
-        total,
+        total: finalTotal,
       }
       const res = await fetch('/api/bookings', {
         method: 'POST',
@@ -404,9 +425,15 @@ export default function CartBookingFlow({ onBack, onConfirmed }) {
                 <span className="text-amber-700">Preferred Slot</span>
                 <span className="text-amber-900 font-bold" data-testid="cart-booking-pref-slot">{form.preferredDate} · {fmtSlot(form.preferredTime)} IST</span>
               </div>
+              {couponStatus?.valid && (
+                <div className="flex justify-between text-green-700">
+                  <span>Coupon ({couponStatus.code})</span>
+                  <span className="font-bold" data-testid="cart-booking-coupon-discount">− {fmt(couponStatus.discount)}</span>
+                </div>
+              )}
               <div className="border-t border-amber-300 pt-1.5 mt-1.5 flex justify-between">
                 <span className="text-amber-700 font-semibold">Total</span>
-                <span className="text-amber-900 font-black" data-testid="cart-booking-total">{fmt(total)}</span>
+                <span className="text-amber-900 font-black" data-testid="cart-booking-total">{fmt(finalTotal)}</span>
               </div>
             </div>
 
@@ -434,23 +461,53 @@ export default function CartBookingFlow({ onBack, onConfirmed }) {
               </div>
             </div>
 
-            {/* Coupon */}
-            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-2xl p-3">
+            {/* Coupon — one-time codes emailed after a previous booking */}
+            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-2xl p-3" data-testid="cart-coupon-section">
               <div className="text-amber-800 font-bold text-xs mb-1.5">🎟️ Have a Coupon Code?</div>
               <div className="flex gap-2">
-                <input name="coupon" value={form.coupon}
+                <input
+                  name="coupon"
+                  value={form.coupon}
                   onChange={e => { handleChange(e); setCouponStatus(null) }}
-                  placeholder="e.g. FIRST50" className="input flex-1 uppercase tracking-widest text-xs" />
-                <button type="button" onClick={applyCoupon}
-                  className="bg-amber-600 hover:bg-amber-700 text-white font-bold px-3 rounded-xl text-xs whitespace-nowrap">
-                  Apply
-                </button>
+                  placeholder="e.g. AVV-XXXXXXX"
+                  data-testid="cart-coupon-input"
+                  disabled={couponStatus?.valid}
+                  className="input flex-1 uppercase tracking-widest text-xs disabled:bg-amber-100/60"
+                />
+                {couponStatus?.valid ? (
+                  <button
+                    type="button"
+                    onClick={() => { setCouponStatus(null); setForm(f => ({ ...f, coupon: '' })) }}
+                    data-testid="cart-coupon-remove"
+                    className="bg-red-100 text-red-700 border border-red-300 hover:bg-red-200 font-bold px-3 rounded-xl text-xs whitespace-nowrap"
+                  >
+                    Remove
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={applyCoupon}
+                    disabled={couponLoading}
+                    data-testid="cart-coupon-apply"
+                    className="bg-amber-600 hover:bg-amber-700 text-white font-bold px-3 rounded-xl text-xs whitespace-nowrap disabled:opacity-60"
+                  >
+                    {couponLoading ? 'Checking…' : 'Apply'}
+                  </button>
+                )}
               </div>
               {couponStatus && (
-                <div className={`mt-1.5 text-[11px] font-semibold ${couponStatus.valid ? 'text-green-700' : 'text-red-500'}`}>
-                  {couponStatus.valid ? `🎉 Applied! ${couponStatus.label}` : '❌ Invalid coupon. Try FIRST50 or ASTRO20'}
+                <div
+                  className={`mt-1.5 text-[11px] font-semibold ${couponStatus.valid ? 'text-green-700' : 'text-red-500'}`}
+                  data-testid="cart-coupon-status"
+                >
+                  {couponStatus.valid
+                    ? `🎉 ${couponStatus.message}`
+                    : `❌ ${couponStatus.message || 'Invalid coupon code'}`}
                 </div>
               )}
+              <p className="mt-2 text-[10px] text-amber-500 leading-relaxed">
+                Coupons are auto-emailed after each booking. One-time use only.
+              </p>
             </div>
 
             {submitError && (
@@ -481,7 +538,7 @@ export default function CartBookingFlow({ onBack, onConfirmed }) {
           <button type="button" onClick={handleSubmit} disabled={loading}
             data-testid="cart-booking-confirm"
             className="flex-1 bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-md disabled:opacity-70 flex items-center justify-center gap-1.5">
-            {loading ? <><span className="animate-spin">⟳</span> Confirming...</> : <>🙏 Confirm Booking — {fmt(total)}</>}
+            {loading ? <><span className="animate-spin">⟳</span> Confirming...</> : <>🙏 Confirm Booking — {fmt(finalTotal)}</>}
           </button>
         )}
       </div>

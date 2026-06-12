@@ -22,6 +22,13 @@ from auth import (
     seed_admin,
     verify_password,
 )
+from coupon_service import (
+    compute_discount,
+    find_and_validate_coupon,
+    maybe_create_coupon_for_booking,
+    redeem_coupon_atomic,
+    tier_for_total,
+)
 from email_service import send_booking_notifications
 from pymongo import ReturnDocument
 
@@ -53,6 +60,8 @@ async def _startup() -> None:
     await db.login_attempts.create_index("identifier")
     await db.bookings.create_index("created_at")
     await db.bookings.create_index("status")
+    await db.coupons.create_index("code", unique=True)
+    await db.coupons.create_index("issued_to_email")
     await seed_admin(db)
 
 
@@ -121,6 +130,11 @@ class BookingUpdate(BaseModel):
     notes: Optional[str] = None  # full replacement of notes field
 
 
+class CouponValidateIn(BaseModel):
+    code: str = Field(min_length=1, max_length=40)
+    subtotal: int = Field(ge=0)
+
+
 # ── Public Routes ────────────────────────────────────────────────────────────
 
 @app.get("/api/health")
@@ -128,9 +142,41 @@ async def health() -> dict:
     return {"status": "ok", "service": "astrovedicvani"}
 
 
+@app.post("/api/coupons/validate")
+async def validate_coupon(payload: CouponValidateIn) -> dict:
+    coupon = await find_and_validate_coupon(db, code=payload.code)
+    percent = int(coupon["discount_percent"])
+    discount = compute_discount(payload.subtotal, percent)
+    return {
+        "ok": True,
+        "code": coupon["code"],
+        "discount_percent": percent,
+        "discount_amount": discount,
+        "message": f"{percent}% off applied — you save ₹{discount:,}",
+    }
+
+
 @app.post("/api/bookings", status_code=201)
 async def create_booking(payload: BookingCreate, background_tasks: BackgroundTasks) -> dict:
     doc = payload.model_dump(by_alias=False, exclude_none=False)
+
+    # ── Coupon redemption (server-side) ──────────────────────────────────────
+    coupon_applied: Optional[dict] = None
+    if payload.coupon:
+        # Validate (read-only) before recalculating totals
+        coupon_doc = await find_and_validate_coupon(db, code=payload.coupon)
+        percent = int(coupon_doc["discount_percent"])
+        sub = int(doc.get("subtotal") or 0)
+        mode_fee_val = int(doc.get("mode_fee") or 0)
+        discount = compute_discount(sub, percent)
+
+        # Recompute total server-side so a tampered client total can't be used.
+        doc["coupon"] = coupon_doc["code"]
+        doc["coupon_percent"] = percent
+        doc["coupon_discount"] = discount
+        doc["total"] = max(0, sub - discount) + mode_fee_val
+        coupon_applied = {"code": coupon_doc["code"], "percent": percent, "discount": discount}
+
     doc["status"] = "pending"
     doc["notes"] = ""
     doc["created_at"] = datetime.now(timezone.utc)
@@ -139,17 +185,36 @@ async def create_booking(payload: BookingCreate, background_tasks: BackgroundTas
     result = await db.bookings.insert_one(doc)
     booking_id = str(result.inserted_id)
 
+    # Mark coupon as used AFTER booking is created
+    if coupon_applied:
+        await redeem_coupon_atomic(db, code=coupon_applied["code"], booking_id=booking_id)
+
+    # Auto-generate a NEW one-time coupon for the next booking (emailed only)
+    next_coupon = await maybe_create_coupon_for_booking(
+        db,
+        booking_id=booking_id,
+        customer_email=doc.get("email"),
+        booking_total=doc.get("total") or 0,
+    )
+
     notification_payload = {**doc, "id": booking_id}
     notification_payload.pop("_id", None)
     notification_payload["created_at"] = doc["created_at"].isoformat()
     notification_payload["updated_at"] = doc["updated_at"].isoformat()
+    notification_payload["coupon_applied"] = coupon_applied
+    notification_payload["next_coupon"] = next_coupon  # may be None
     background_tasks.add_task(send_booking_notifications, notification_payload)
 
     return {
         "ok": True,
         "id": booking_id,
         "status": "pending",
-        "message": "Booking confirmed. Our team will contact you within 2–4 hours.",
+        "coupon_applied": coupon_applied,
+        "message": (
+            "Booking confirmed. Our team will contact you within 2–4 hours."
+            + (" A special discount coupon for your next booking has been sent to your email."
+               if next_coupon else "")
+        ),
     }
 
 
