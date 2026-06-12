@@ -139,17 +139,8 @@ export default function Navbar({ onBooking }) {
             </button>
           </div>
 
-          {/* Mobile right-side controls — Our Services pill + Hamburger */}
+          {/* Mobile right-side controls — Hamburger only */}
           <div className="lg:hidden flex items-center gap-2 flex-shrink-0">
-            <a
-              href="#services"
-              data-testid="mobile-services-link"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-yellow-300 text-xs font-extrabold tracking-wide bg-amber-500/15 border border-yellow-500/50 hover:bg-amber-500/25 transition-all whitespace-nowrap"
-              style={{textShadow:'0 0 8px rgba(251,191,36,0.5)'}}
-            >
-              <span>⭐</span>
-              <span>Services</span>
-            </a>
             <button
               className="text-yellow-300 text-3xl leading-none p-1.5 hover:text-yellow-200 transition-colors"
               onClick={() => setMenuOpen(!menuOpen)}
