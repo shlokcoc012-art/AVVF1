@@ -1,7 +1,15 @@
-.env
-.env.*
-*.env
 credentials.json
 *.pem
 *.key
 .credentials
+
+# Test/admin credentials — never deploy
+memory/test_credentials.md
+
+# Python build artefacts
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+.DS_Store
