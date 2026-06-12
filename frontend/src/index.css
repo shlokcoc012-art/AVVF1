@@ -440,7 +440,6 @@ body {
 .cart-btn-flow {
   background: linear-gradient(270deg, #7f1d1d, #991b1b, #b91c1c, #dc2626, #c2185b, #b71c1c, #991b1b, #7f1d1d);
   background-size: 400% 400%;
-  position: relative;
   box-shadow: 0 0 0 2px #d4a017, 0 0 0 4px #7f1d1d, 0 6px 24px rgba(185,28,28,0.55), 0 2px 8px rgba(0,0,0,0.4);
   animation: cartBgCycle 5s ease-in-out infinite, cartPulse 2s ease-in-out infinite, cartBounceIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
 }
@@ -466,6 +465,25 @@ body {
 @keyframes cartBounceIn {
   from { opacity: 0; transform: translateY(24px) scale(0.7); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Empty-cart shortcut — subtle premium gold style ── */
+.cart-btn-empty {
+  background: linear-gradient(135deg, #78350f 0%, #b45309 50%, #92400e 100%);
+  background-size: 200% 200%;
+  box-shadow: 0 0 0 2px rgba(251,191,36,0.45), 0 6px 24px rgba(146,64,14,0.45), 0 2px 8px rgba(0,0,0,0.3);
+  animation: cartEmptyShimmer 6s ease-in-out infinite, cartEmptyGlow 3s ease-in-out infinite, cartBounceIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.cart-btn-empty:hover {
+  box-shadow: 0 0 0 2px rgba(251,191,36,0.8), 0 8px 32px rgba(146,64,14,0.7), 0 2px 8px rgba(0,0,0,0.3);
+}
+@keyframes cartEmptyShimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+@keyframes cartEmptyGlow {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(251,191,36,0.45), 0 6px 24px rgba(146,64,14,0.45), 0 0 0 0 rgba(251,191,36,0.5); }
+  50%      { box-shadow: 0 0 0 2px rgba(251,191,36,0.7),  0 6px 28px rgba(146,64,14,0.6),  0 0 0 8px rgba(251,191,36,0); }
 }
 @keyframes cartArrow {
   0%, 100% { transform: translateX(0); opacity: 1; }
