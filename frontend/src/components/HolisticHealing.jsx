@@ -127,14 +127,17 @@ export default function HolisticHealing() {
           </p>
 
           {/* Flat-price pill */}
-          <div className="mt-6 inline-flex flex-col sm:flex-row items-center gap-3 bg-amber-700/60 border-2 border-yellow-500/60 rounded-2xl px-6 py-3 shadow-lg">
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-black text-yellow-300 dark-price-anim">₹{PRICE.toLocaleString('en-IN')}</span>
-              <span className="text-amber-200 text-sm font-semibold">per booking</span>
+          <div className="mt-6 inline-flex flex-col sm:flex-row items-center gap-4 bg-amber-700/60 border-2 border-yellow-500/60 rounded-2xl px-6 py-3 shadow-lg combo-badge-glow">
+            <div className="flex items-center gap-2.5">
+              <span className="text-3xl sm:text-4xl font-black text-yellow-300 dark-price-anim leading-none">₹{PRICE.toLocaleString('en-IN')}</span>
+              <span className="text-amber-100/90 text-sm font-semibold leading-tight self-center">per<br/>booking</span>
             </div>
-            <div className="hidden sm:block w-px h-8 bg-yellow-600/40" />
-            <div className="flex items-center gap-1.5 text-amber-100 text-sm font-semibold">
-              <span className="text-yellow-300 text-lg">✨</span>
+            <div className="hidden sm:block w-px h-10 bg-yellow-600/50" />
+            <div
+              className="flex items-center gap-2 text-amber-900 text-sm font-extrabold uppercase tracking-wide bg-gradient-to-r from-yellow-300 via-amber-300 to-yellow-400 px-4 py-1.5 rounded-full shadow-md border border-yellow-200 animate-highlight-pulse"
+              data-testid="healing-sessions-highlight"
+            >
+              <span className="text-amber-700 text-lg leading-none star-pop">✨</span>
               <span>3 Sessions Included</span>
             </div>
           </div>

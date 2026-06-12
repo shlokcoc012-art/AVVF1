@@ -127,23 +127,20 @@ export default function Hero({ onBooking }) {
 
         {/* Tagline */}
         <p
-          className="text-yellow-100/90 mb-10 max-w-3xl mx-auto fade-in-up text-xl sm:text-2xl md:text-[1.55rem]"
+          className="text-yellow-100/95 mb-10 max-w-3xl mx-auto fade-in-up text-lg sm:text-xl md:text-[1.4rem] px-2"
           style={{
             animationDelay: '0.7s',
-            fontFamily: '"Cormorant Garamond", "Georgia", serif',
+            fontFamily: '"Playfair Display", "Georgia", serif',
             fontWeight: 400,
             lineHeight: 1.55,
-            letterSpacing: '0.01em',
+            letterSpacing: '0.005em',
           }}
         >
-          Unlock the cosmic secrets of your destiny with
-          <br />
-          <span
-            className="text-yellow-300"
-            style={{ fontWeight: 600 }}
-          >Authentic Vedic Wisdom</span>
-          <br />
-          Trusted by 5000+ people worldwide
+          Unlock the cosmic secrets of your destiny with{' '}
+          <span className="text-yellow-300" style={{ fontWeight: 600 }}>
+            Authentic Vedic Wisdom
+          </span>
+          {' '}— trusted by 5000+ people worldwide.
         </p>
 
         {/* CTA Buttons */}
