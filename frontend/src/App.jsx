@@ -33,8 +33,8 @@ function PublicSite() {
       <PrashnKundali />
       <TriComboPromo />
       <ModernAstrology />
-      <Specialties />
       <HolisticHealing />
+      <Specialties />
       <Testimonials />
       <Footer onBooking={openBooking} />
       <CartDrawer />
