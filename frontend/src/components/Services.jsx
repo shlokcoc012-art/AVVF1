@@ -28,14 +28,14 @@ const services = [
     points: ['Past Life Regression via D9 & D60 Charts', 'Pending Karmic Debts (Rinanubandhana)', 'Present Life Soul Purpose (Atmakaraka)', 'Precise Remedial Measures for Karmic Relief'],
   },
   {
-    id: 'svc-grah', icon: '🛡️', title: 'Grah Dosh Relief', subtitle: 'ग्रह दोष निवारण', price: 2599, wasPrice: 3999, discount: '35% Off',
+    id: 'svc-grah', icon: '🛡️', title: 'Grah Dosh Relief', subtitle: 'ग्रह दोष निवारण', price: 2199, wasPrice: 3999, discount: '45% Off',
     color: 'bg-gradient-to-br from-red-500 to-amber-600',
     desc: 'Identify and neutralize Mangal Dosh, Kaal Sarp, Sade Sati, Pitra Dosh and Nazar Dosh with personalized mantras, gemstones and yantras.',
     detail: 'Identifies the exact nature and affected life areas of each dosha and prescribes precise, tailored upay — not generic solutions — for lasting relief.',
     points: ['Mangal Dosh Nivaran', 'Kaal Sarp Dosh Relief', 'Shani Sade Sati Upay', 'Pitra Dosh Shanti', 'Nazar Dosh Removal', 'Gemstone Recommendations', 'Rudraksha & Yantra Upay', 'Dosha Nivaran Puja Guidance'],
   },
   {
-    id: 'svc-muhurt', icon: '🕐', title: 'Shubh Muhurt', subtitle: 'शुभ मुहूर्त', price: 2599, wasPrice: 3999, discount: '35% Off',
+    id: 'svc-muhurt', icon: '🕐', title: 'Shubh Muhurt', subtitle: 'शुभ मुहूर्त', price: 2199, wasPrice: 3999, discount: '45% Off',
     color: 'bg-gradient-to-br from-yellow-500 to-yellow-700',
     desc: 'Auspicious timing for all important life events — marriage, business launch, property purchase, travel and more — to maximise planetary blessings.',
     detail: 'Selects the most auspicious moment using Tithi, Nakshatra, Vara, and your personal Lagna — a powerful Muhurt can carry even modest efforts to great success.',
@@ -167,6 +167,9 @@ export default function Services() {
     setTimeout(() => setToast(null), 3500)
   }
 
+  const featuredServices = services.filter(s => s.featured)
+  const regularServices = services.filter(s => !s.featured)
+
   return (
     <section id="services" className="py-20 bg-gradient-to-b from-amber-50 to-yellow-100 diamond-pattern-light relative">
       <div className="max-w-7xl mx-auto px-4">
@@ -184,8 +187,29 @@ export default function Services() {
 
           <div className="mt-4 h-1 w-24 bg-gradient-to-r from-yellow-400 to-amber-600 mx-auto rounded-full" />
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {services.map((s, i) => <ServiceCard key={s.id} s={s} i={i} onSwap={handleSwap} />)}
+        <div className="space-y-8">
+          {/* Row 1: First 2 premium cards side-by-side */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {featuredServices.slice(0, 2).map((s, i) => (
+              <ServiceCard key={s.id} s={s} i={i} onSwap={handleSwap} />
+            ))}
+          </div>
+
+          {/* Row 2: 3rd premium card centered alone */}
+          {featuredServices[2] && (
+            <div className="flex justify-center">
+              <div className="w-full lg:w-1/2 lg:px-4">
+                <ServiceCard s={featuredServices[2]} i={2} onSwap={handleSwap} />
+              </div>
+            </div>
+          )}
+
+          {/* Row 3+: Regular (non-premium) services in 2 columns */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {regularServices.map((s, i) => (
+              <ServiceCard key={s.id} s={s} i={i + 3} onSwap={handleSwap} />
+            ))}
+          </div>
         </div>
       </div>
 

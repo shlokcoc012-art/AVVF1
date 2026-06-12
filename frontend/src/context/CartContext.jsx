@@ -83,8 +83,8 @@ export const DIVINE_COMBO = {
 export const SERVICE_PRICES = {
   'Numerology': 1199,
   'Energy Analysis': 1199,
-  'Grah Dosh Relief': 2599,
-  'Shubh Muhurt': 2599,
+  'Grah Dosh Relief': 2199,
+  'Shubh Muhurt': 2199,
   'Kundali & Marriage': 2199,
   'Career & Future': 2199,
 }
