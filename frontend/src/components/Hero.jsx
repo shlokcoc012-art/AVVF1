@@ -105,16 +105,17 @@ export default function Hero({ onBooking }) {
         </div>
 
         {/* Main Title — flowing gold animation */}
-        <h1 className="text-5xl md:text-7xl font-extrabold mb-2 tracking-tight fade-in-up hero-title-flow" style={{animationDelay:'0.4s'}}>
+        <h1 className="text-5xl md:text-7xl font-extrabold mb-5 md:mb-4 tracking-tight fade-in-up hero-title-flow" style={{animationDelay:'0.4s'}}>
           AstroVedicVani
         </h1>
         <div
-          className="text-amber-200/95 mb-6 fade-in-up flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-4 text-lg sm:text-xl md:text-2xl"
+          className="text-amber-200/95 mb-8 fade-in-up flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-4 text-xl sm:text-2xl md:text-[1.7rem]"
           style={{
             animationDelay: '0.55s',
             fontFamily: '"Cinzel", "Cormorant Garamond", serif',
             letterSpacing: '0.18em',
             textShadow: '0 0 18px rgba(251,191,36,0.25)',
+            marginTop: '0.25rem',
           }}
         >
           <span className="font-medium whitespace-nowrap">Ancient Wisdom</span>
@@ -126,12 +127,12 @@ export default function Hero({ onBooking }) {
 
         {/* Tagline */}
         <p
-          className="text-yellow-100/90 mb-10 max-w-3xl mx-auto fade-in-up text-lg sm:text-xl md:text-2xl"
+          className="text-yellow-100/90 mb-10 max-w-3xl mx-auto fade-in-up text-xl sm:text-2xl md:text-[1.7rem]"
           style={{
             animationDelay: '0.7s',
             fontFamily: '"Cormorant Garamond", "Georgia", serif',
             fontWeight: 400,
-            lineHeight: 1.55,
+            lineHeight: 1.5,
             letterSpacing: '0.01em',
           }}
         >
