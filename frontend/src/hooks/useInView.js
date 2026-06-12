@@ -19,6 +19,8 @@ export function useInView(options = {}) {
     }, { threshold: 0.15, ...options })
     obs.observe(el)
     return () => obs.disconnect()
+    // `options` intentionally not in deps — it's an object literal recreated each render and would cause an infinite loop. Pass primitive options for them to take effect.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return [ref, inView]

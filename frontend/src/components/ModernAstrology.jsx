@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useInView } from '../hooks/useInView'
-import { useCart, SECTION_CONFIG, CROSS_COMBO } from '../context/CartContext'
+import { useCart } from '../context/CartContext'
+import { SECTION_CONFIG, CROSS_COMBO } from '../context/cartConstants'
 
 const modernTopics = [
   { id: 'ma-numerology', icon: '🔢', title: 'Numerology',          desc: 'Hidden power of numbers in your life — Name, Birth, Destiny and Soul numbers.',
@@ -88,7 +89,7 @@ function CrossComboTeaser({ gridRef }) {
 
 // ── Shared price badges component ─────────────────────────────────────────────
 function PriceBadges({ section, highlightMode, setHighlightMode, gridRef }) {
-  const { sectionItems, hasCombo, hasCrossCombo, triComboMode } = useCart()
+  const { sectionItems, hasCombo, hasCrossCombo } = useCart()
   const cfg = SECTION_CONFIG[section]
   const grp = sectionItems(section)
   const combo = hasCombo(section)

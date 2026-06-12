@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
 // All 4 legal documents — labels and content match what the operator provided.
-export const LEGAL_DOCS = {
+const LEGAL_DOCS = {
   privacy: {
     title: 'Privacy Policy',
     subtitle: 'ASTRO VEDIC VANI — COMPREHENSIVE LEGAL, MEDICAL, FINANCIAL, AND SPIRITUAL DISCLAIMER',

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useCart, SECTION_CONFIG, CROSS_COMBO, DIVINE_COMBO } from '../context/CartContext'
+import { useCart } from '../context/CartContext'
+import { SECTION_CONFIG, CROSS_COMBO, DIVINE_COMBO } from '../context/cartConstants'
 import CartBookingFlow from './CartBookingFlow'
 
 const MODES = [
@@ -170,7 +171,7 @@ export default function CartDrawer() {
   const {
     items, mode, setMode,
     subtotal, modeFee, total,
-    isOpen, setIsOpen, sectionItems, hasCombo, hasCrossCombo, hasDivineCombo, divineAnchorSection, sectionTotal,
+    isOpen, setIsOpen, sectionItems, hasCrossCombo, hasDivineCombo, divineAnchorSection,
   } = useCart()
 
   // 'cart' = standard cart view, 'booking' = embedded booking form, 'confirmed' = success screen

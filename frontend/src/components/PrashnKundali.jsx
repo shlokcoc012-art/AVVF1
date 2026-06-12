@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useInView } from '../hooks/useInView'
-import { useCart, SECTION_CONFIG, CROSS_COMBO } from '../context/CartContext'
+import { useCart } from '../context/CartContext'
+import { SECTION_CONFIG, CROSS_COMBO } from '../context/cartConstants'
 
 const topics = [
   { id: 'pk-career',       icon: '💼', title: 'Profession & Career',   desc: 'Best career path, job change timing, business success, promotion prospects.',

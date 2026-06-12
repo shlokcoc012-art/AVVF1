@@ -15,9 +15,8 @@ from __future__ import annotations
 import secrets
 import string
 from datetime import datetime, timezone
-from typing import Any, Optional
+from typing import Optional
 
-from bson import ObjectId
 from fastapi import HTTPException
 
 
@@ -116,6 +115,8 @@ async def find_and_validate_coupon(db, *, code: str) -> dict:
 
 def compute_discount(subtotal: int | float, percent: int) -> int:
     """Discount applies to the subtotal (mode fee excluded). Rounded down to whole ₹."""
+    sub: int = 0
+    pct: int = 0
     try:
         sub = int(subtotal)
         pct = int(percent)

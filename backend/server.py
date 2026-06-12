@@ -27,7 +27,6 @@ from coupon_service import (
     find_and_validate_coupon,
     maybe_create_coupon_for_booking,
     redeem_coupon_atomic,
-    tier_for_total,
 )
 from email_service import send_booking_notifications
 from pymongo import ReturnDocument

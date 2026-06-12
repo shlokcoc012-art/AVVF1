@@ -99,16 +99,16 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authFetch, queryString])
+  }, [authFetch, queryString, stats])
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/set-state-in-effect
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchList() }, [fetchList])
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const id = setTimeout(() => { fetchList() }, 300)
     return () => clearTimeout(id)
+    // fetchList is intentionally omitted — search updates queryString which already triggers fetchList; debounce here only when typing in the search box.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 
   // Services list derived from data for filter dropdown

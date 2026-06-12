@@ -1,5 +1,6 @@
 import { useInView } from '../hooks/useInView'
-import { useCart, CROSS_COMBO, DIVINE_COMBO, SECTION_CONFIG } from '../context/CartContext'
+import { useCart } from '../context/CartContext'
+import { CROSS_COMBO, DIVINE_COMBO, SECTION_CONFIG } from '../context/cartConstants'
 
 // Progress dots helper
 function ProgressDots({ filled, total, color }) {
@@ -21,7 +22,6 @@ export default function TriComboPromo() {
 
   const sections = CROSS_COMBO.sections
   const coveredSections = sections.filter(sec => items.some(i => i.section === sec))
-  const missingSections = sections.filter(sec => !items.some(i => i.section === sec))
   const crossProgress = coveredSections.length
 
   // Divine progress: best anchor candidate + cross coverage
