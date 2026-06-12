@@ -1,10 +1,20 @@
+import { useState } from 'react'
 import { useCart } from '../context/CartContext'
+import LegalModal from './LegalModal'
 
 export default function Footer({ onBooking }) {
   const { setIsOpen } = useCart()
+  const [legalDoc, setLegalDoc] = useState(null)
   // Every footer service/solution link just opens the cart so users can review what's
   // in it and proceed to book — service & concern are auto-derived from cart contents.
   const openCart = () => setIsOpen(true)
+
+  const legalLinks = [
+    { key: 'privacy',    label: 'Privacy Policy' },
+    { key: 'terms',      label: 'Terms of Service' },
+    { key: 'refund',     label: 'Refund Policy' },
+    { key: 'disclaimer', label: 'Disclaimer' },
+  ]
 
   const footerServices = [
     'Vedic Astrology', 'Parashari Astrology', 'Nadi Jyotish', 'KP Astrology',
@@ -157,9 +167,16 @@ export default function Footer({ onBooking }) {
         {/* Bottom Bar */}
         <div className="mt-12 pt-6 border-t border-amber-800/40 text-center">
           <div className="flex flex-wrap justify-center gap-4 text-amber-500 text-xs mb-4">
-            {['Privacy Policy', 'Terms of Service', 'Refund Policy', 'Disclaimer'].map((item, i, arr) => (
-              <span key={item} className="flex items-center gap-4">
-                <span className="hover:text-amber-300 cursor-pointer transition-colors">{item}</span>
+            {legalLinks.map((item, i, arr) => (
+              <span key={item.key} className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => setLegalDoc(item.key)}
+                  data-testid={`legal-link-${item.key}`}
+                  className="hover:text-amber-300 cursor-pointer transition-colors bg-transparent border-0 p-0 text-xs font-inherit"
+                >
+                  {item.label}
+                </button>
                 {i < arr.length - 1 && <span className="text-amber-800">·</span>}
               </span>
             ))}
@@ -172,6 +189,7 @@ export default function Footer({ onBooking }) {
           </p>
         </div>
       </div>
+      {legalDoc && <LegalModal docKey={legalDoc} onClose={() => setLegalDoc(null)} />}
     </footer>
   )
 }
