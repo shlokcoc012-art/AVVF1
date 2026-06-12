@@ -141,8 +141,8 @@ export default function Hero({ onBooking }) {
             className="text-yellow-300"
             style={{ fontWeight: 600 }}
           > Authentic Vedic Wisdom</span>
-          <span className="text-amber-300/80"> — </span>
-          trusted by 5000+ people worldwide
+          <br />
+          Trusted by 5000+ people worldwide
         </p>
 
         {/* CTA Buttons */}
