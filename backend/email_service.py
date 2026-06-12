@@ -326,7 +326,9 @@ def _customer_text(b: dict) -> str:
 
 def send_booking_notifications(booking: dict) -> None:
     """Fire admin + customer emails. Safe to call from BackgroundTasks."""
-    admin_to = os.environ.get("ADMIN_EMAIL")
+    # Allow the admin notification recipient to be a different mailbox than
+    # the admin login account. Falls back to ADMIN_EMAIL for backwards compat.
+    admin_to = os.environ.get("ADMIN_NOTIFY_EMAIL") or os.environ.get("ADMIN_EMAIL")
     customer_to = booking.get("email")
     name = booking.get("name", "Guest")
 
