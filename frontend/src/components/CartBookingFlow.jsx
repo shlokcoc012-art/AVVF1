@@ -505,9 +505,6 @@ export default function CartBookingFlow({ onBack, onConfirmed }) {
                     : `❌ ${couponStatus.message || 'Invalid coupon code'}`}
                 </div>
               )}
-              <p className="mt-2 text-[10px] text-amber-500 leading-relaxed">
-                Coupons are auto-emailed after each booking. One-time use only.
-              </p>
             </div>
 
             {submitError && (
