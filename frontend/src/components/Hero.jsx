@@ -139,10 +139,10 @@ export default function Hero({ onBooking }) {
           Unlock the cosmic secrets of your destiny with
           <span
             className="text-yellow-300"
-            style={{ fontStyle: 'italic', fontWeight: 600 }}
+            style={{ fontWeight: 600 }}
           > Authentic Vedic Wisdom</span>
           <span className="text-amber-300/80"> — </span>
-          trusted by 5000+ souls worldwide
+          trusted by 5000+ people worldwide
         </p>
 
         {/* CTA Buttons */}
