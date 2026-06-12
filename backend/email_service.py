@@ -229,8 +229,10 @@ def _customer_html(b: dict) -> str:
       </div>
 
       <p style="margin:20px 0 0;font-size:12px;color:#a16207;line-height:1.6">
-        Need to reschedule? Reply to this email or call us at
-        <a href="tel:+919199191902" style="color:#b45309;text-decoration:none">+91 91991 91902</a>.
+        Need to reschedule? Contact us at
+        <a href="mailto:support@astrovedicvani.com" style="color:#b45309;text-decoration:none">support@astrovedicvani.com</a>
+        or WhatsApp us at
+        <a href="https://wa.me/919199191902" style="color:#b45309;text-decoration:none">+91 91991 91902</a>.
       </p>
     </div>
     <div style="background:#fef3c7;padding:14px 24px;text-align:center;font-size:11px;color:#a16207">

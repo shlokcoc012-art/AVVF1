@@ -127,7 +127,7 @@ export default function Hero({ onBooking }) {
 
         {/* Tagline */}
         <p
-          className="text-yellow-100/95 mb-10 max-w-3xl mx-auto fade-in-up text-lg sm:text-xl md:text-[1.4rem] px-2"
+          className="text-yellow-100/95 mb-10 max-w-3xl mx-auto fade-in-up text-base sm:text-lg md:text-[1.2rem] px-2"
           style={{
             animationDelay: '0.7s',
             fontFamily: '"Playfair Display", "Georgia", serif',
